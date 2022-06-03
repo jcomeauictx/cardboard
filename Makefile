@@ -14,7 +14,8 @@ accept: android-sdk-licenses $(ANDROID_SDK_ROOT)/licenses
 android-sdk-licenses:
 	git clone https://github.com/Shadowstyler/android-sdk-licenses.git
 hellocardboard-android.apk: gradlew
-	./$< assemble
+	#./$< assemble
+	gradle assemble
 $(OVLTMP) $(OVLWRK) $(ANDROID_SDK_ROOT):
 	mkdir $@
 env:

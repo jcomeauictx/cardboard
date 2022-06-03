@@ -15,11 +15,11 @@ android-sdk-licenses:
 	git clone https://github.com/Shadowstyler/android-sdk-licenses.git
 hellocardboard-android.apk: gradlew
 	./$< build
-overlay.tmp overlay.work $(ANDROID_SDK_ROOT):
+$(OVLTMP) $(OVLWRK) $(ANDROID_SDK_ROOT):
 	mkdir $@
 env:
 	$@
-$(NDK): $(ANDROID_SDK_ROOT)
+$(NDK): $(ANDROID_SDK_ROOT) $(OVLTMP) $(OVLWRK)
 	[ -d "$@" ] || sudo mount -t overlay overlay \
 	 -olowerdir=$(REAL_ANDROID_SDK),upperdir=$(OVLTMP),workdir=$(OVLWRK) \
 	 $(ANDROID_SDK_ROOT)

@@ -10,7 +10,7 @@ all: install $(NDK) accept hellocardboard-android.apk
 install:
 	sudo apt install git make android-sdk android-sdk-platform-23
 accept: android-sdk-licenses $(ANDROID_SDK_ROOT)/licenses
-	[ "$(LICENSES)" ] || cp -a $</*-license $(word 2, $+)
+	[ "$(LICENSES)" ] || sudo cp -a $</*-license $(word 2, $+)
 android-sdk-licenses:
 	git clone https://github.com/Shadowstyler/android-sdk-licenses.git
 hellocardboard-android.apk: gradlew

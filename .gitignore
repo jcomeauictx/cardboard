@@ -12,3 +12,7 @@ gitlog.json
 .externalNativeBuild
 
 hellocardboard-android/libraries/
+android-sdk-licenses
+android-sdk
+overlay.tmp
+overlay.work

@@ -1,8 +1,10 @@
 # https://wiki.debian.org/AndroidTools/IntroBuildingApps
 REAL_ANDROID_SDK ?= /usr/lib/android-sdk
-ANDROID_SDK_ROOT := sdk
+ANDROID_SDK_ROOT := android-sdk
 LICENSES = $(wildcard $(ANDROID_SDK_ROOT)/licenses/*-license)
 NDK := $(ANDROID_SDK_ROOT)/ndk
+OVLTMP := overlay.tmp
+OVLWRK := overlay.work
 export
 all: install $(NDK) accept hellocardboard-android.apk
 install:
@@ -13,11 +15,11 @@ android-sdk-licenses:
 	git clone https://github.com/Shadowstyler/android-sdk-licenses.git
 hellocardboard-android.apk: gradlew
 	./$< build
-tmp work $(ANDROID_SDK_ROOT):
+overlay.tmp overlay.work $(ANDROID_SDK_ROOT):
 	mkdir $@
 env:
 	$@
 $(NDK): $(ANDROID_SDK_ROOT)
 	[ -d "$@" ] || sudo mount -t overlay overlay \
-	 -olowerdir=$(REAL_ANDROID_SDK),upperdir=tmp,workdir=work \
+	 -olowerdir=$(REAL_ANDROID_SDK),upperdir=$(OVLTMP),workdir=$(OVLWRK) \
 	 $(ANDROID_SDK_ROOT)

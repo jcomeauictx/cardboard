@@ -15,10 +15,9 @@ accept: android-sdk-licenses $(ANDROID_SDK_ROOT)/licenses
 android-sdk-licenses:
 	git clone https://github.com/Shadowstyler/android-sdk-licenses.git
 hellocardboard-android.apk: gradlew
-	./$< assemble
+	-./$< sdk:assemble && ./$< build
 	# Following `gradle assemble` gives error:
 	# Minimum supported Gradle version is 6.7.1. Current version is 4.4.1.
-	gradle assemble
 $(OVLTMP) $(OVLWRK) $(ANDROID_SDK_ROOT):
 	mkdir $@
 env:
@@ -27,3 +26,7 @@ $(NDK): $(ANDROID_SDK_ROOT) $(OVLTMP) $(OVLWRK)
 	[ -d "$@" ] || sudo mount -t overlay overlay \
 	 -olowerdir=$(REAL_ANDROID_SDK),upperdir=$(OVLTMP),workdir=$(OVLWRK) \
 	 $(ANDROID_SDK_ROOT)
+umount: $(ANDROID_SDK_ROOT)
+	sudo umount $<
+tasks projects: gradlew
+	./$< $@

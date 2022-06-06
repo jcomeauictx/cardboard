@@ -6,16 +6,27 @@ LICENSES = $(wildcard $(ANDROID_SDK_ROOT)/licenses/*-license)
 NDK := $(ANDROID_SDK_ROOT)/ndk
 OVLTMP := overlay.tmp
 OVLWRK := overlay.work
+APP := hellocardboard-android
+DEBUGLIBS := $(APP)/build/intermediates/cmake/debug/obj/armeabi-v7a/
+LIBCARDBOARD := $(DEBUGLIBS)/libcardboard_jni.so
+RELEASE := $(APP)/build/outputs/apk/release
+DEBUG := $(APP)/build/outputs/apk/debug
+APK := $(DEBUG)/$(APP)-debug.apk
+UNSIGNED := $(RELEASE)/$(APP)-release-unsigned.apk
+SDKMANAGER := $(ANDROID_SDK_ROOT)/tools/bin/sdkmanager.commandlinetools
 export
-all: install $(NDK) accept hellocardboard-android.apk
+all: install $(NDK) accept $(APK)
 install:
 	sudo apt install git make android-sdk android-sdk-platform-23
 accept: android-sdk-licenses $(ANDROID_SDK_ROOT)/licenses
+	yes | $(SDKMANAGER) --sdk_root=$(ANDROID_SDK_ROOT) --licenses
 	[ "$(LICENSES)" ] || sudo cp -a $</*-license $(word 2, $+)
 android-sdk-licenses:
 	git clone https://github.com/Shadowstyler/android-sdk-licenses.git
-hellocardboard-android.apk: gradlew
-	-./$< sdk:assemble && ./$< build
+$(LIBCARDBOARD): gradlew
+	./$< sdk:assemble
+$(APK): gradlew $(LIBCARDBOARD)
+	./$< build
 	# Following `gradle assemble` gives error:
 	# Minimum supported Gradle version is 6.7.1. Current version is 4.4.1.
 $(OVLTMP) $(OVLWRK) $(ANDROID_SDK_ROOT):
@@ -29,4 +40,6 @@ $(NDK): $(ANDROID_SDK_ROOT) $(OVLTMP) $(OVLWRK)
 umount: $(ANDROID_SDK_ROOT)
 	sudo umount $<
 tasks projects: gradlew
+	./$< $@
+clean: gradlew umount
 	./$< $@

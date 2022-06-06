@@ -27,8 +27,6 @@ $(LIBCARDBOARD): gradlew
 	./$< sdk:assemble
 $(APK): gradlew $(LIBCARDBOARD)
 	./$< build
-	# Following `gradle assemble` gives error:
-	# Minimum supported Gradle version is 6.7.1. Current version is 4.4.1.
 $(OVLTMP) $(OVLWRK) $(ANDROID_SDK_ROOT):
 	mkdir $@
 env:

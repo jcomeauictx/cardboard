@@ -41,3 +41,5 @@ tasks projects: gradlew
 	./$< $@
 clean: gradlew umount
 	./$< $@
+apkinstall: $(APK)
+	adb install $<
